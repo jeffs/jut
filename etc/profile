@@ -14,5 +14,5 @@
 #
 
 top="$(git rev-parse --show-toplevel)"
-export PATH="$top/bin:$PATH:$top/var/obj"
+export PATH="$top/bin:$top/var/obj/app:$PATH"
 hash -r

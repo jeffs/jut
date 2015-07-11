@@ -1,9 +1,7 @@
-/** @file std.hpp Includes all standard library headers supported by libc++. */
+// Includes all standard library headers supported by libc++.
 
-#ifndef INCLUDED_UNBUGGY_STD
-#define INCLUDED_UNBUGGY_STD
-
-// INCLUDES {{{
+#ifndef JUT_STD_SLW_INCLUDED
+#define JUT_STD_SLW_INCLUDED
 
 #include <algorithm>
 #include <array>
@@ -76,13 +74,4 @@
 #include <valarray>
 #include <vector>
 
-// }}}
-
 #endif
-
-//         Copyright Unbuggy Software, LLC 2014.
-// Distributed under the Boost Software License, Version 1.0.
-//    (See accompanying file LICENSE_1_0.txt or copy at
-//          http://www.boost.org/LICENSE_1_0.txt)
-//
-// vim:foldmethod=marker
