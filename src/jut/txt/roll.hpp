@@ -21,6 +21,13 @@ void roll(
         std::ostream&,
         std::chrono::milliseconds =roll_period_default);
 
+inline void roll(
+        std::istream&&            lines,
+        std::ostream&             out,
+        std::chrono::milliseconds period =roll_period_default) {
+    roll(lines, out, period);   // delegate to lvalue overload
+}
+
 }
 }
 
