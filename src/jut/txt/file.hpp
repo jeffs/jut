@@ -3,20 +3,17 @@
 
 // C++ Standard
 #include <fstream>
-#include <stdexcept>
 #include <string>
+#include <vector>
 
 namespace jut { // Jeff's UTilitites
 namespace txt { // TeXT
 
-template <class S>
-std::ifstream open(S&& fname) {
-    using namespace std::string_literals;
-    std::ifstream file(std::forward<S>(fname));
-    if (!file)
-        throw std::runtime_error(fname + " is not a readable file"s);
-    return file;
-}
+std::ifstream open(std::string const& fname);
+
+std::string slurp(std::string const& fname);
+
+std::vector<std::string> slurp_lines(std::string const& fname);
 
 }
 }
