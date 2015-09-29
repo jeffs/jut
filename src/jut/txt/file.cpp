@@ -6,11 +6,13 @@
 
 namespace jut {
 
-std::ifstream txt::open(std::string const& fname) {
+std::fstream txt::open(
+        std::string const&      fname,
+        std::ios_base::openmode mode) {
     using namespace std::string_literals;
-    std::ifstream file(fname, std::ios::binary);
+    std::fstream file(fname, mode);
     if (!file)
-        throw std::runtime_error(fname + " is not a readable file"s);
+        throw open_error(fname + " could not be opened"s);
     return file;
 }
 
