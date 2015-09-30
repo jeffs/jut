@@ -10,9 +10,11 @@
 #include "jut/txt/split.hpp"
 
 // C++ Standard
+#include <algorithm>
 #include <chrono>
 #include <exception>
 #include <iostream>
+#include <locale>
 #include <unordered_map>
 
 namespace {
@@ -23,15 +25,25 @@ using namespace std::literals;
 
 using bucket_map = std::unordered_map<std::string, std::vector<std::string>>;
 
+auto lower_cased(std::string word) {
+    std::transform(begin(word), end(word), begin(word),
+            [](char c) { return std::tolower(c, std::locale()); });
+    return word;
+}
+
 auto sorted(std::string word) {
     std::sort(begin(word), end(word));
     return word;
 }
 
+auto get_key(std::string const& word) {
+    return sorted(lower_cased(word));
+}
+
 auto make_buckets(std::string const& word_file_name) {
     bucket_map buckets;
     for (auto const& word : txt::slurp_lines(word_file_name))
-        buckets[sorted(word)].push_back(word);
+        buckets[get_key(word)].push_back(word);
     return buckets;
 }
 
@@ -74,7 +86,7 @@ int main(int argc, char const** argv) try {
     auto want_roll = argc > 1 && (argv[1] == "--roll"s || argv[1] == "-r"s);
     if (want_roll) ++argv;
     while (auto word = *++argv)
-        for (auto const& anagram : buckets[sorted(word)])
+        for (auto const& anagram : buckets[get_key(word)])
             if (want_roll) txt::roll(anagram + '\n', std::cout, 10ms);
             else std::cout << anagram << '\n';
 } catch (std::exception const& x) {
