@@ -9,7 +9,13 @@
 namespace jut { // Jeff's UTilitites
 namespace txt { // TeXT
 
-std::ifstream open(std::string const& fname);
+struct open_error : std::runtime_error {
+    using std::runtime_error::runtime_error;
+};
+
+std::fstream open(
+        std::string const&      fname,
+        std::ios_base::openmode mode =std::ios_base::in);
 
 std::string slurp(std::string const& fname);
 
