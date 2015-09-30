@@ -6,9 +6,11 @@
 #define TODO throw std::logic_error("TODO");
 
 #include "jut/txt/file.hpp"
+#include "jut/txt/roll.hpp"
 #include "jut/txt/split.hpp"
 
 // C++ Standard
+#include <chrono>
 #include <exception>
 #include <iostream>
 #include <unordered_map>
@@ -69,9 +71,12 @@ int main(int argc, char const** argv) try {
     auto bucket_file_name = "/tmp/jut-buckets.txt";
     auto word_file_name = "/usr/share/dict/words";
     auto buckets = load_buckets(bucket_file_name, word_file_name);
+    auto want_roll = argc > 1 && (argv[1] == "--roll"s || argv[1] == "-r"s);
+    if (want_roll) ++argv;
     while (auto word = *++argv)
         for (auto const& anagram : buckets[sorted(word)])
-            std::cout << anagram << '\n';
+            if (want_roll) txt::roll(anagram + '\n', std::cout, 10ms);
+            else std::cout << anagram << '\n';
 } catch (std::exception const& x) {
     std::cerr << "error: " << x.what() << '\n';
     return -1;
