@@ -1,7 +1,9 @@
+/** @file jut/slw/set.hpp Operators that work with `std::set`. */
+
 #ifndef JUT_SLW_SET_INCLUDED
 #define JUT_SLW_SET_INCLUDED
 
-// C++ Standard
+// C++ standard
 #include <iostream>
 #include <set>
 
@@ -30,8 +32,7 @@ std::set<T> operator-(std::set<T> xs, T const& x) {
     return xs -= x;
 }
 
-// TODO Generalize to accomodate all standard collections.
-// TODO Omit final comma.
+/** @todo Generalize to all standard collections.  @todo Omit final comma. */
 template <class T>
 std::ostream& operator<<(std::ostream& out, std::set<T> const& xs) {
     out << "{ ";

@@ -1,7 +1,9 @@
+/** @file jut/txt/file.hpp Utilities for working with text files. */
+
 #ifndef JUT_TXT_FILE_INCLUDED
 #define JUT_TXT_FILE_INCLUDED
 
-// C++ Standard
+// C++ standard
 #include <fstream>
 #include <string>
 #include <vector>

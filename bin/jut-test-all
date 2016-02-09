@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+#
+# NAME
+#   jut-test-all - calls `var/obj/app/jut-test-*`
+#
+# SYNOPSYS
+#   jut-test-all
+#
+# DESCRIPTION
+#   This script calls each current `jut` test driver in turn; it does NOT
+#   automatically build the code before doing so.  If you want the test
+#   executables to match the `src/app/jut-test-*.cpp` code in the repository's
+#   working copy, run `bake`, then `make` in the `src` directory before
+#   calling `jut-test-all`.
+
+set -e  # Exit immediately on error.
+
+top="`git rev-parse --show-toplevel`"
+
+for cpp in "$top"/src/app/jut-test-*.cpp
+do  app=`basename "$cpp" |sed 's,\.cpp$,,'`
+    echo -e "\n* $app"
+    "$app"
+done

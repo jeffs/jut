@@ -1,4 +1,4 @@
-// Prints "Hello, world."
+/** @file hello.cpp Prints "Hello, world." */
 
 #include "jut/slw/std.hpp"
 

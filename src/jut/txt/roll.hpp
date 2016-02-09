@@ -1,7 +1,12 @@
+/** @file jut/txt/roll.hpp Prints text in a slow, flickery way.
+ *
+ * This component gives textual user interfaces an old-fashioned feel.
+ */
+
 #ifndef JUT_TXT_ROLL_INCLUDED
 #define JUT_TXT_ROLL_INCLUDED
 
-// C++ Standard
+// C++ standard
 #include <chrono>
 #include <iosfwd>
 #include <string>

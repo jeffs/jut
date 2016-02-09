@@ -1,7 +1,9 @@
-// Orchard
+/** @file app/jut-test-slw-set.cpp Test driver for component jut/slw/set. */
+
+// Local
 #include "jut/slw/set.hpp"
 
-// C++ Standard
+// C++ standard
 #include <cassert>
 #include <iostream>
 #include <string>

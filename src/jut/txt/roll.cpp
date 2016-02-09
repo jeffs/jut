@@ -1,6 +1,6 @@
 #include "jut/txt/roll.hpp"
 
-// C++ Standard
+// C++ standard
 #include <algorithm>
 #include <iomanip>
 #include <iostream>
