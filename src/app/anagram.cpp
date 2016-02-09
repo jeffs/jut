@@ -1,10 +1,9 @@
-// Prints anagrams of words provided as command-line arguments.
-//
-// TODO Cache buckets.
-// TODO Accept word-file as a flag parameter.
+/** @file anagram.cpp Prints anagrams of words provided on command line.
+ *
+ * @todo Accept word-file as a flag parameter.
+ */
 
-#define TODO throw std::logic_error("TODO");
-
+// Local
 #include "jut/txt/file.hpp"
 #include "jut/txt/roll.hpp"
 #include "jut/txt/split.hpp"
@@ -92,6 +91,7 @@ arg_set parse_args(int argc, char const** argv) {
 
 }
 
+/** Prints anagrams of each element of `argv`. */
 int main(int argc, char const** argv) try {
 
     // Parse command-line arguments.
