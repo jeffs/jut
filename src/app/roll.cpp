@@ -7,7 +7,7 @@
 #include "jut/txt/file.hpp"
 #include "jut/txt/roll.hpp"
 
-// C++ Standard
+// C++ standard
 #include <exception>
 #include <fstream>
 #include <iomanip>

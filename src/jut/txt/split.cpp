@@ -1,6 +1,6 @@
 #include "jut/txt/split.hpp"
 
-// C++ Standard
+// C++ standard
 #include <sstream>
 
 namespace jut {

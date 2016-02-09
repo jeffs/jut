@@ -6,7 +6,7 @@
 #ifndef JUT_TXT_ROLL_INCLUDED
 #define JUT_TXT_ROLL_INCLUDED
 
-// C++ Standard
+// C++ standard
 #include <chrono>
 #include <iosfwd>
 #include <string>
