@@ -253,6 +253,8 @@ class printer {
 
     void compile(entity const& source, unordered_set<entity> const& headers);
 
+    void doc();
+
     void link(entity const& target, unordered_set<entity> const& objects);
 
     void mkdir(entity const& target);
@@ -540,6 +542,16 @@ void printer::compile(
     m_out << "\n\t" << m_config.compile_command << '\n';
 }
 
+void printer::doc()
+{
+    m_out <<
+        "\n.PHONY: doc"
+        "\ndoc: $(ETCDIR)/Doxyfile $(DOCDIR)"
+        "\n\tcd $(SRCDIR) && doxygen $^"
+        "\n\n$(DOCDIR):"
+        "\n\t$(MKDIR) $@";
+}
+
 void printer::link(entity const& target, unordered_set<entity> const& objects)
 {
     m_out << '\n';
@@ -772,6 +784,7 @@ void generator::print(ostream& out) const
     }
     print.all(targets);
     print.clean();
+    print.doc();
 
     unordered_set<entity> folders;
     for (auto const& entry : m_includes) {
@@ -803,8 +816,11 @@ int main(int argc, char** argv) try
 
         // preamble, printed at top of makefile
         "PREFIX = $(shell git rev-parse --show-toplevel)\n"
+        "ETCDIR = $(PREFIX)/etc\n"
         "SRCDIR = $(PREFIX)/src\n"
-        "OBJDIR = $(PREFIX)/var/obj\n"
+        "VARDIR = $(PREFIX)/var\n"
+        "DOCDIR = $(VARDIR)/doc\n"
+        "OBJDIR = $(VARDIR)/obj\n"
         "CXX = clang++\n"
         "CPPFLAGS = -I$(SRCDIR)\n"
         "CXXFLAGS = -std=c++1y -pedantic -Wall -stdlib=libc++\n"
@@ -824,6 +840,14 @@ int main(int argc, char** argv) try
         "$(SRCDIR)/",   // source_prefix
         "$(OBJDIR)/",   // object_prefix
     };
+
+// .PHONY: doc
+// doc: $(ETCDIR)/Doxyfile $(DOCDIR)
+// 	cd $(SRCDIR) && doxygen $^
+//
+// $(DOCDIR):
+// 	$(MKDIR) $@
+//
 
     generator gen(&config);
     gen.read_files(&argv[1], &argv[argc]);

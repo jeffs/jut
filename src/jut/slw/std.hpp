@@ -1,4 +1,4 @@
-// Includes all standard library headers supported by libc++.
+/** @file jut/slw/std.hpp Includes all standard library headers. */
 
 #ifndef JUT_STD_SLW_INCLUDED
 #define JUT_STD_SLW_INCLUDED
