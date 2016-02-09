@@ -1,4 +1,4 @@
-/** @file test-slw-set.cpp Test driver for jut/slw/set component. */
+/** @file app/jut-test-slw-set.cpp Test driver for component jut/slw/set. */
 
 // Local
 #include "jut/slw/set.hpp"

@@ -1,4 +1,4 @@
-/* @file app/test-print.cpp Test driver for `print` component. */
+/** @file app/jut-test-txt-print.cpp Test driver for component jut/txt/print. */
 
 // Local
 #include "jut/txt/print.hpp"

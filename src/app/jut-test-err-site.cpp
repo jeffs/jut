@@ -1,6 +1,6 @@
-/** @file app/test-error.cpp Test driver for component jut/err/error. */
+/** @file app/jut-test-err-site.cpp Test driver for component jut/err/site. */
 
-#include "jut/err/error.hpp"
+#include "jut/err/site.hpp"
 
 // Local
 #include "jut/txt/print.hpp"

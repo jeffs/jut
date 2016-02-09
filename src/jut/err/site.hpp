@@ -1,7 +1,7 @@
-/** @file jut/err/error.hpp Custom exceptions and error-handling macros. */
+/** @file jut/err/site.hpp Exception annotated with throw site. */
 
-#ifndef JUT_ERR_ERROR_INCLUDED
-#define JUT_ERR_ERROR_INCLUDED
+#ifndef JUT_ERR_SITE_INCLUDED
+#define JUT_ERR_SITE_INCLUDED
 
 // C++ standard
 #include <sstream>
