@@ -1,6 +1,7 @@
 /** @file jut/dat/either.hpp Generic variant type having two branches.
  *
  * @todo allocator awareness
+ * @todo `emplace_left`, `emplace_right`
  */
 
 #ifndef JUT_DAT_EITHER_INCLUDED
@@ -25,22 +26,35 @@ template <class L, class R>  // Left, Right
 class either {
 
     // PRIVATE NON-STATIC DATA MEMBERS
+
     union { L _left; R _right; };
     bool _is_right;
 
     // PRIVATE NON-STATIC MEMBER FUNCTIONS
-    either(false_type, L value): _left(std::move(value)), _is_right(false) { }
-    either(true_type, R value): _right(std::move(value)), _is_right(true) { }
+
+    template <class T>
+    either(false_type, T&& value):
+        _left(std::forward<T>(value)), _is_right(false) { }
+
+    template <class T>
+    either(true_type, T&& value):
+        _right(std::forward<T>(value)), _is_right(true) { }
+
+    either(true_type, R&& value): _right(std::move(value)), _is_right(true) { }
 
   public:
 
     // PUBLIC STATIC MEMBER FUNCTIONS
 
-    static
-    either make_left(L value) { return {false_type{}, std::move(value)}; }
+    template <class T>
+    static either make_left(T&& value) {
+        return {false_type{}, std::forward<T>(value)};
+    }
 
-    static
-    either make_right(R value) { return {true_type{}, std::move(value)}; }
+    template <class T>
+    static either make_right(T&& value) {
+        return {true_type{}, std::forward<T>(value)};
+    }
 
     // PUBLIC METHODS
 
@@ -104,6 +118,9 @@ class either {
     }
 
     // non-const
+
+    L& left() & { assert(is_left()); return _left; }
+    R& right() & { assert(is_right()); return _right; }
 
     L&& left() && { assert(is_left()); return std::move(_left); }
     R&& right() && { assert(is_right()); return std::move(_right); }
