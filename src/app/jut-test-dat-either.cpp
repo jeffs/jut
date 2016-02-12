@@ -153,15 +153,31 @@ void test_default_constructor() {
 }
 
 void test_copy_constructor_left() {
-    auto y = either<int, string>::make_left(42), x = y;
-    assert(x.is_left());
-    assert(x.left() == 42);
+    copy_fixture f;
+    {
+        auto y = either<copy_counter, string>::make_left(f.counter1), x = y;
+        assert(x.is_left());
+        assert(x.left().value == 1);
+    }
+    assert(f.copy_constructions == 2);  // copied into y, copied into x
+    assert(f.copy_assignments   == 0);
+    assert(f.move_constructions == 0);
+    assert(f.move_assignments   == 0);
+    assert(f.destructions       == 2);
 }
 
 void test_copy_constructor_right() {
-    auto y = either<int, string>::make_right("hello"), x = y;
-    assert(x.is_right());
-    assert(x.right() == "hello");
+    copy_fixture f;
+    {
+        auto y = either<string, copy_counter>::make_right(f.counter2), x = y;
+        assert(x.is_right());
+        assert(x.right().value == 2);
+    }
+    assert(f.copy_constructions == 2);  // copied into y, copied into x
+    assert(f.copy_assignments   == 0);
+    assert(f.move_constructions == 0);
+    assert(f.move_assignments   == 0);
+    assert(f.destructions       == 2);
 }
 
 void test_copy_assignment_left_left() {
