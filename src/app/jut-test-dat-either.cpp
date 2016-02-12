@@ -1,7 +1,8 @@
+/** @file app/jut-test-dat-either.cpp Test driver for jut/test/dat/either. */
+
 #include "jut/dat/either.hpp"
 
 // C++ standard
-#include <iostream> // XXX
 #include <string>
 
 using jut::dat::either;
@@ -118,10 +119,37 @@ void test_make_right_move() {
     assert(f.destructions       == 1);
 }
 
+namespace test_default_constructor_imp {
+
+    copy_report left_report, right_report;
+
+    struct left_counter: copy_counter {
+        left_counter(): copy_counter(1, left_report) { }
+    };
+
+    struct right_counter: copy_counter {
+        right_counter(): copy_counter(2, right_report) { }
+    };
+}
+
+/** @note This function should not be called more than once per process. */
 void test_default_constructor() {
-    either<int, string> x;
-    assert(x.is_left());
-    assert(x.left() == 0);
+    namespace imp = test_default_constructor_imp;
+    {
+        either<imp::left_counter, imp::right_counter> x;
+        assert(x.is_left());
+        assert(x.left().value == 1);
+    }
+    assert(imp::left_report.copy_constructions  == 0);
+    assert(imp::left_report.copy_assignments    == 0);
+    assert(imp::left_report.move_constructions  == 0);
+    assert(imp::left_report.move_assignments    == 0);
+    assert(imp::left_report.destructions        == 1);
+    assert(imp::right_report.copy_constructions == 0);
+    assert(imp::right_report.copy_assignments   == 0);
+    assert(imp::right_report.move_constructions == 0);
+    assert(imp::right_report.move_assignments   == 0);
+    assert(imp::right_report.destructions       == 0);
 }
 
 void test_copy_constructor_left() {
@@ -267,10 +295,13 @@ void test_move_assignment_right_right() {
 
 int main() {
 
+    // static functions
     test_make_left_copy();
     test_make_left_move();
     test_make_right_copy();
     test_make_right_move();
+
+    // special member functions
     test_default_constructor();
     test_copy_constructor_left();
     test_copy_constructor_right();
