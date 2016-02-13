@@ -345,6 +345,18 @@ void test_move_assignment_right_right() {
     assert(f.destructions       == 2);
 }
 
+void test_left_branch() {
+    either<int, string> x = jut::dat::make_left(42);
+    assert(x.is_left());
+    assert(x.left() == 42);
+}
+
+void test_right_branch() {
+    either<int, string> x = jut::dat::make_right("hello");
+    assert(x.is_right());
+    assert(x.right() == "hello");
+}
+
 void test_left_lvalue() {
     auto x = either<int, string>::make_left(1);
     assert(x.left() == 1);
@@ -392,6 +404,22 @@ void test_const() {
     assert(!y.leftp());
 }
 
+void test_equality() {
+    auto const hello1 = either<string, int>::make_left("hello");
+    auto const hello2 = either<string, int>::make_left("hello");
+    auto const world  = either<string, int>::make_left("world");
+    auto const three1 = either<string, int>::make_right(3);
+    auto const three2 = either<string, int>::make_right(3);
+    auto const four   = either<string, int>::make_right(4);
+    assert(hello1 == hello1); assert(!(hello1 != hello1));
+    assert(hello1 == hello2); assert(!(hello1 != hello2));
+    assert(hello1 != world ); assert(!(hello1 == world ));
+    assert(three1 == three1); assert(!(three1 != three1));
+    assert(three1 == three2); assert(!(three1 != three2));
+    assert(hello1 != three1); assert(!(hello1 == three1));
+    assert(three1 != four  ); assert(!(three1 == four  ));
+}
+
 int main() {
 
     // static functions
@@ -414,11 +442,16 @@ int main() {
     test_move_assignment_left_right();
     test_move_assignment_right_left();
     test_move_assignment_right_right();
+
+    test_left_branch();
+    test_right_branch();
     test_left_lvalue();
     test_left_rvalue();
     test_leftp();
     test_rightp();
     test_const();
+
+    test_equality();
 
     // MANIPULATE
     //  - left on rvalue

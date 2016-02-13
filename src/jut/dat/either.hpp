@@ -18,8 +18,8 @@ namespace dat { // DATa structures
 using std::false_type;
 using std::true_type;
 
-template <class T> struct left_t { T value; };
-template <class T> struct right_t { T value; };
+template <class T> struct left_branch { T value; };
+template <class T> struct right_branch { T value; };
 
 /** Holds either an `L` or an `R` at any given time. */
 template <class L, class R>  // Left, Right
@@ -119,6 +119,30 @@ class either {
 
     // non-const
 
+    template <class T>
+    either(left_branch<T> const& branch):
+        _is_right(false) {
+        new (&_left) L(branch.value);
+    }
+
+    template <class T>
+    either(left_branch<T>&& branch):
+        _is_right(false) {
+        new (&_left) L(std::move(branch.value));
+    }
+
+    template <class T>
+    either(right_branch<T> const& branch):
+        _is_right(true) {
+        new (&_right) L(branch.value);
+    }
+
+    template <class T>
+    either(right_branch<T>&& branch):
+        _is_right(true) {
+        new (&_right) R(std::move(branch.value));
+    }
+
     L& left()  & { assert(is_left());  return _left;  }
     R& right() & { assert(is_right()); return _right; }
 
@@ -142,10 +166,21 @@ class either {
 };
 
 template <class T>
-left_t<T> make_left(T&& value) { return {std::forward<T>(value)}; }
+left_branch<T> make_left(T&& value) { return {std::forward<T>(value)}; }
 
 template <class T>
-right_t<T> make_right(T&& value) { return {std::forward<T>(value)}; }
+right_branch<T> make_right(T&& value) { return {std::forward<T>(value)}; }
+
+template <class L, class R>
+bool operator==(either<L, R> const& lhs, either<L, R> const& rhs) {
+    return (lhs.is_left()  && rhs.is_left()  && lhs.left()  == rhs.left())
+        || (lhs.is_right() && rhs.is_right() && lhs.right() == rhs.right());
+}
+
+template <class L, class R>
+bool operator!=(either<L, R> const& lhs, either<L, R> const& rhs) {
+    return !(lhs == rhs);
+}
 
 }   // dat
 }   // jut
