@@ -119,24 +119,24 @@ class either {
 
     // non-const
 
-    L& left() & { assert(is_left()); return _left; }
+    L& left()  & { assert(is_left());  return _left;  }
     R& right() & { assert(is_right()); return _right; }
 
-    L&& left() && { assert(is_left()); return std::move(_left); }
+    L&& left()  && { assert(is_left());  return std::move(_left);  }
     R&& right() && { assert(is_right()); return std::move(_right); }
 
-    L* leftp() { return is_left() ? &_left : nullptr; }
+    L* leftp()  { return is_left()  ? &_left  : nullptr; }
     R* rightp() { return is_right() ? &_right : nullptr; }
 
     // const
 
-    bool is_left() const { return !_is_right; }
-    bool is_right() const { return _is_right; }
+    bool is_left()  const { return !_is_right; }
+    bool is_right() const { return  _is_right; }
 
-    L const& left() const& { assert(is_left()); return _left; }
+    L const& left()  const& { assert(is_left());  return _left;  }
     R const& right() const& { assert(is_right()); return _right; }
 
-    L const* leftp() const { return is_left() ? &_left : nullptr; }
+    L const* leftp()  const { return is_left()  ? &_left  : nullptr; }
     R const* rightp() const { return is_right() ? &_right : nullptr; }
 
 };

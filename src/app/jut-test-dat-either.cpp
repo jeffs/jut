@@ -345,6 +345,53 @@ void test_move_assignment_right_right() {
     assert(f.destructions       == 2);
 }
 
+void test_left_lvalue() {
+    auto x = either<int, string>::make_left(1);
+    assert(x.left() == 1);
+}
+
+void test_left_rvalue() {
+    assert((either<int, string>::make_left(2).left() == 2));
+}
+
+void test_right_lvalue() {
+    auto x = either<string, int>::make_right(3);
+    assert(x.right() == 3);
+}
+
+void test_right_rvalue() {
+    assert((either<string, int>::make_right(4).right() == 4));
+}
+
+void test_leftp() {
+    auto x = either<string, int>::make_left("hello");
+    assert(x.leftp() && *x.leftp() == "hello");
+    assert(!x.rightp());
+    *x.leftp() = "world";
+    assert(*x.leftp() == "world");
+}
+
+void test_rightp() {
+    auto x = either<string, int>::make_right(2);
+    assert(x.rightp() && *x.rightp() == 2);
+    assert(!x.leftp());
+    *x.rightp() = 3;
+    assert(*x.rightp() == 3);
+}
+
+void test_const() {
+    auto const x = either<string, int>::make_left("hello");
+    auto const y = either<string, int>::make_right(2);
+    assert(x.is_left());
+    assert(!x.is_right());
+    assert(!y.is_left());
+    assert(y.is_right());
+    assert(x.leftp() && *x.leftp() == "hello");
+    assert(!x.rightp());
+    assert(y.rightp() && *y.rightp() == 2);
+    assert(!y.leftp());
+}
+
 int main() {
 
     // static functions
@@ -367,6 +414,11 @@ int main() {
     test_move_assignment_left_right();
     test_move_assignment_right_left();
     test_move_assignment_right_right();
+    test_left_lvalue();
+    test_left_rvalue();
+    test_leftp();
+    test_rightp();
+    test_const();
 
     // MANIPULATE
     //  - left on rvalue
