@@ -6,7 +6,6 @@
 #include <string>
 
 using jut::dat::either;
-using std::move;
 using std::string;
 
 struct copy_report {
@@ -37,7 +36,7 @@ struct copy_counter {
     copy_counter& operator=(copy_counter const& rhs) & {
         assert(&report == &rhs.report);
         value = rhs.value;
-        ++report.move_constructions;
+        ++report.copy_assignments;
         return *this;
     }
 
@@ -49,7 +48,7 @@ struct copy_counter {
 
     copy_counter& operator=(copy_counter&& rhs) & {
         assert(&report == &rhs.report);
-        value = move(rhs.value);
+        value = std::move(rhs.value);
         ++report.move_assignments;
         return *this;
     }
@@ -181,132 +180,169 @@ void test_copy_constructor_right() {
 }
 
 void test_copy_assignment_left_left() {
-    auto x = either<int, string>::make_left(1);
-    auto y = either<int, string>::make_left(2);
-    x = y;
-    assert(x.is_left());
-    assert(x.left() == 2);
+    copy_fixture f;
+    {
+        auto x = either<copy_counter, int>::make_left(f.counter1);
+        auto y = either<copy_counter, int>::make_left(f.counter2);
+        x = y;
+        assert(x.is_left());
+        assert(x.left().value == 2);
+        assert(y.is_left());
+        assert(y.left().value == 2);
+    }
+    assert(f.copy_constructions == 2);  // copied into x, copied into y
+    assert(f.copy_assignments   == 1);
+    assert(f.move_constructions == 0);
+    assert(f.move_assignments   == 0);
+    assert(f.destructions       == 2);
 }
 
 void test_copy_assignment_left_right() {
-    auto x = either<int, string>::make_left(42);
-    auto y = either<int, string>::make_right("hello");
-    x = y;
-    assert(x.is_right());
-    assert(x.right() == "hello");
+    copy_fixture f;
+    {
+        auto x = either<copy_counter, copy_counter>::make_left(f.counter1);
+        auto y = either<copy_counter, copy_counter>::make_right(f.counter2);
+        x = y;
+        assert(x.is_right());
+        assert(x.right().value == 2);
+        assert(y.is_right());
+        assert(y.right().value == 2);
+    }
+    assert(f.copy_constructions == 3);  // x.left, y.right, x.right
+    assert(f.copy_assignments   == 0);
+    assert(f.move_constructions == 0);
+    assert(f.move_assignments   == 0);
+    assert(f.destructions       == 3);  // x.left, y.right, x.right
 }
 
 void test_copy_assignment_right_left() {
-    auto x = either<int, string>::make_right("hello");
-    auto y = either<int, string>::make_left(42);
-    x = y;
-    assert(x.is_left());
-    assert(x.left() == 42);
+    copy_fixture f;
+    {
+        auto x = either<copy_counter, copy_counter>::make_right(f.counter1);
+        auto y = either<copy_counter, copy_counter>::make_left(f.counter2);
+        x = y;
+        assert(x.is_left());
+        assert(x.left().value == 2);
+        assert(y.is_left());
+        assert(y.left().value == 2);
+    }
+    assert(f.copy_constructions == 3);
+    assert(f.copy_assignments   == 0);
+    assert(f.move_constructions == 0);
+    assert(f.move_assignments   == 0);
+    assert(f.destructions       == 3);
 }
 
 void test_copy_assignment_right_right() {
-    auto x = either<int, string>::make_right("hello");
-    auto y = either<int, string>::make_right("world");
-    x = y;
-    assert(x.is_right());
-    assert(x.right() == "world");
+    copy_fixture f;
+    {
+        auto x = either<int, copy_counter>::make_right(f.counter1);
+        auto y = either<int, copy_counter>::make_right(f.counter2);
+        x = y;
+        assert(x.is_right());
+        assert(x.right().value == 2);
+        assert(y.is_right());
+        assert(y.right().value == 2);
+    }
+    assert(f.copy_constructions == 2);
+    assert(f.copy_assignments   == 1);
+    assert(f.move_constructions == 0);
+    assert(f.move_assignments   == 0);
+    assert(f.destructions       == 2);
 }
 
 void test_move_constructor_left() {
-    copy_report r;
-    copy_counter c(42, r);
+    copy_fixture f;
     {
-        auto y = either<copy_counter, string>::make_left(c);
-        r.clear();
-        auto x = move(y);
+        auto y = either<copy_counter, string>::make_left(f.counter1);
+        auto x = std::move(y);
         assert(x.is_left());
-        assert(x.left().value == 42);
+        assert(x.left().value == 1);
     }
-    assert(r.copy_constructions == 0);
-    assert(r.copy_assignments   == 0);
-    assert(r.move_constructions == 1);
-    assert(r.move_assignments   == 0);
-    assert(r.destructions       == 2);  // x.left(), y.left()
+    assert(f.copy_constructions == 1);  // into y
+    assert(f.copy_assignments   == 0);
+    assert(f.move_constructions == 1);  // into x
+    assert(f.move_assignments   == 0);
+    assert(f.destructions       == 2);  // x.left(), y.left()
 }
 
 void test_move_constructor_right() {
-    copy_report r;
-    copy_counter c(42, r);
+    copy_fixture f;
     {
-        auto y = either<string, copy_counter>::make_right(c);
-        r.clear();
-        auto x = move(y);
+        auto y = either<string, copy_counter>::make_right(f.counter1);
+        auto x = std::move(y);
         assert(x.is_right());
-        assert(x.right().value == 42);
+        assert(x.right().value == 1);
     }
-    assert(r.copy_constructions == 0);
-    assert(r.copy_assignments   == 0);
-    assert(r.move_constructions == 1);
-    assert(r.move_assignments   == 0);
-    assert(r.destructions       == 2);  // x.right(), y.right()
+    assert(f.copy_constructions == 1);  // into y
+    assert(f.copy_assignments   == 0);
+    assert(f.move_constructions == 1);  // into x
+    assert(f.move_assignments   == 0);
+    assert(f.destructions       == 2);  // x.right(), y.right()
 }
 
 void test_move_assignment_left_left() {
-    copy_report r;
-    copy_counter c1(1, r), c2(2, r);
+    copy_fixture f;
     {
-        auto x = either<copy_counter, string>::make_left(c1);
-        auto y = either<copy_counter, string>::make_left(c2);
-        r.clear();
-        x = move(y);
+        auto x = either<copy_counter, string>::make_left(f.counter1);
+        auto y = either<copy_counter, string>::make_left(f.counter2);
+        x = std::move(y);
         assert(x.is_left());
         assert(x.left().value == 2);
     }
-    assert(r.copy_constructions == 0);
-    assert(r.copy_assignments   == 0);
-    assert(r.move_constructions == 0);
-    assert(r.move_assignments   == 1);
-    assert(r.destructions       == 2);  // x.left(), y.left()
+    assert(f.copy_constructions == 2);
+    assert(f.copy_assignments   == 0);
+    assert(f.move_constructions == 0);
+    assert(f.move_assignments   == 1);
+    assert(f.destructions       == 2);
 }
 
 void test_move_assignment_left_right() {
-    copy_report r;
-    copy_counter c(42, r);
-    auto x = either<string, copy_counter>::make_left("hello");
-    auto y = either<string, copy_counter>::make_right(c);
-    r.clear();
-    x = move(y);
-    assert(x.is_right());
-    assert(x.right().value == 42);
-    assert(r.copy_constructions == 0);
-    assert(r.copy_assignments   == 0);
-    assert(r.move_constructions == 1);
-    assert(r.move_assignments   == 0);
+    copy_fixture f;
+    {
+        auto x = either<copy_counter, copy_counter>::make_left(f.counter1);
+        auto y = either<copy_counter, copy_counter>::make_right(f.counter2);
+        x = std::move(y);
+        assert(x.is_right());
+        assert(x.right().value == 2);
+    }
+    assert(f.copy_constructions == 2);
+    assert(f.copy_assignments   == 0);
+    assert(f.move_constructions == 1);
+    assert(f.move_assignments   == 0);
+    assert(f.destructions       == 3);
 }
 
 void test_move_assignment_right_left() {
-    copy_report r;
-    copy_counter c(42, r);
-    auto x = either<copy_counter, string>::make_right("hello");
-    auto y = either<copy_counter, string>::make_left(c);
-    r.clear();
-    x = move(y);
-    assert(x.is_left());
-    assert(x.left().value == 42);
-    assert(r.copy_constructions == 0);
-    assert(r.copy_assignments   == 0);
-    assert(r.move_constructions == 1);
-    assert(r.move_assignments   == 0);
+    copy_fixture f;
+    {
+        auto x = either<copy_counter, copy_counter>::make_right(f.counter1);
+        auto y = either<copy_counter, copy_counter>::make_left(f.counter2);
+        x = std::move(y);
+        assert(x.is_left());
+        assert(x.left().value == 2);
+    }
+    assert(f.copy_constructions == 2);
+    assert(f.copy_assignments   == 0);
+    assert(f.move_constructions == 1);
+    assert(f.move_assignments   == 0);
+    assert(f.destructions       == 3);
 }
 
 void test_move_assignment_right_right() {
-    copy_report r;
-    copy_counter c1(1, r), c2(2, r);
-    auto x = either<string, copy_counter>::make_right(c1);
-    auto y = either<string, copy_counter>::make_right(c2);
-    r.clear();
-    x = move(y);
-    assert(x.is_right());
-    assert(x.right().value == 2);
-    assert(r.copy_constructions == 0);
-    assert(r.copy_assignments   == 0);
-    assert(r.move_constructions == 0);
-    assert(r.move_assignments   == 1);
+    copy_fixture f;
+    {
+        auto x = either<string, copy_counter>::make_right(f.counter1);
+        auto y = either<string, copy_counter>::make_right(f.counter2);
+        x = std::move(y);
+        assert(x.is_right());
+        assert(x.right().value == 2);
+    }
+    assert(f.copy_constructions == 2);
+    assert(f.copy_assignments   == 0);
+    assert(f.move_constructions == 0);
+    assert(f.move_assignments   == 1);
+    assert(f.destructions       == 2);
 }
 
 int main() {
@@ -331,12 +367,6 @@ int main() {
     test_move_assignment_left_right();
     test_move_assignment_right_left();
     test_move_assignment_right_right();
-
-    // DESTROY
-    //  - destroy left
-    //  - destroy right
-    //  - destroy left after move-from
-    //  - destroy right after move-from
 
     // MANIPULATE
     //  - left on rvalue
