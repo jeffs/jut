@@ -357,6 +357,34 @@ void test_right_branch() {
     assert(x.right() == "hello");
 }
 
+void test_emplace_left_on_left() {
+    either<string, int> x;
+    x.emplace_left(3, 'a');
+    assert(x.is_left());
+    assert(x.left() == "aaa");
+}
+
+void test_emplace_left_on_right() {
+    auto x = either<string, int>::make_right(1);
+    x.emplace_left(3, 'a');
+    assert(x.is_left());
+    assert(x.left() == "aaa");
+}
+
+void test_emplace_right_on_left() {
+    auto x = either<int, string>::make_left(2);
+    x.emplace_right(3, 'a');
+    assert(x.is_right());
+    assert(x.right() == "aaa");
+}
+
+void test_emplace_right_on_right() {
+    either<int, string> x;
+    x.emplace_right(3, 'a');
+    assert(x.is_right());
+    assert(x.right() == "aaa");
+}
+
 void test_left_lvalue() {
     auto x = either<int, string>::make_left(1);
     assert(x.left() == 1);
@@ -445,6 +473,10 @@ int main() {
 
     test_left_branch();
     test_right_branch();
+    test_emplace_left_on_left();
+    test_emplace_left_on_right();
+    test_emplace_right_on_left();
+    test_emplace_right_on_right();
     test_left_lvalue();
     test_left_rvalue();
     test_leftp();

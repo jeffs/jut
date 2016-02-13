@@ -2,6 +2,8 @@
  *
  * @todo allocator awareness
  * @todo `emplace_left`, `emplace_right`
+ * @todo specialize `std::hash`
+ * @todo ordered comparisons (`<` et al)
  */
 
 #ifndef JUT_DAT_EITHER_INCLUDED
@@ -141,6 +143,20 @@ class either {
     either(right_branch<T>&& branch):
         _is_right(true) {
         new (&_right) R(std::move(branch.value));
+    }
+
+    template <class ...Ts>
+    void emplace_left(Ts&&... xs) {
+        this->~either();
+        _is_right = false;
+        new (&_left) L(std::forward<Ts>(xs)...);
+    }
+
+    template <class ...Ts>
+    void emplace_right(Ts&&... xs) {
+        this->~either();
+        _is_right = true;
+        new (&_right) R(std::forward<Ts>(xs)...);
     }
 
     L& left()  & { assert(is_left());  return _left;  }
