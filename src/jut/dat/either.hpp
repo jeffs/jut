@@ -54,10 +54,20 @@ struct left_branch {
 };
 
 template <class ...Ts>
+left_branch<Ts...> make_left(Ts&&... args) {
+    return left_branch<Ts...>{std::forward<Ts>(args)...};
+}
+
+template <class ...Ts>
 struct right_branch {
     std::tuple<Ts...> arguments;
     explicit right_branch(Ts&&... xs): arguments(xs...) { }
 };
+
+template <class ...Ts>
+right_branch<Ts...> make_right(Ts&&... args) {
+    return right_branch<Ts...>{std::forward<Ts>(args)...};
+}
 
 /** Holds either an `L` or an `R` at any given time. */
 template <class L, class R>  // Left, Right
@@ -224,16 +234,6 @@ class either {
     R const* rightp() const { return is_right() ? &_right : nullptr; }
 
 };
-
-template <class ...Ts>
-left_branch<Ts...> make_left(Ts&&... args) {
-    return left_branch<Ts...>{std::forward<Ts>(args)...};
-}
-
-template <class ...Ts>
-right_branch<Ts...> make_right(Ts&&... args) {
-    return right_branch<Ts...>{std::forward<Ts>(args)...};
-}
 
 template <class L, class R>
 bool operator==(either<L, R> const& lhs, either<L, R> const& rhs) {
