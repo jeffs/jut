@@ -20,8 +20,44 @@ namespace dat { // DATa structures
 using std::false_type;
 using std::true_type;
 
-template <class T> struct left_branch { T value; };
-template <class T> struct right_branch { T value; };
+namespace detail {
+
+/** C++17 will provide `std::invoke`. */
+template <class F, class ...Ts>
+constexpr decltype(auto) invoke(F&& f, Ts&&... xs) {
+    return std::forward<F>(f)(std::forward<Ts>(xs)...);
+}
+
+template <class F, class Ts, std::size_t ...Is>
+constexpr decltype(auto) apply_imp(
+        F&&  f,
+        Ts&& xs,
+        std::index_sequence<Is...>) {
+    return invoke(std::forward<F>(f), std::get<Is>(std::forward<Ts>(xs))...);
+}
+
+/** @note C++17 may provide `std::apply`. */
+template <class F, class T>
+constexpr decltype(auto) apply(F&& f, T&& xs) {
+    return apply_imp(
+            std::forward<F>(f),
+            std::forward<T>(xs),
+            std::make_index_sequence<std::tuple_size<std::decay_t<T>>{}>{});
+}
+
+}   // detail
+
+template <class ...Ts>
+struct left_branch {
+    std::tuple<Ts...> arguments;
+    explicit left_branch(Ts&&... xs): arguments(xs...) { }
+};
+
+template <class ...Ts>
+struct right_branch {
+    std::tuple<Ts...> arguments;
+    explicit right_branch(Ts&&... xs): arguments(xs...) { }
+};
 
 /** Holds either an `L` or an `R` at any given time. */
 template <class L, class R>  // Left, Right
@@ -127,22 +163,30 @@ class either {
         new (&_left) L(branch.value);
     }
 
-    template <class T>
-    either(left_branch<T>&& branch):
+    template <class... Ts>
+    either(left_branch<Ts...>&& branch):
         _is_right(false) {
-        new (&_left) L(std::move(branch.value));
+        detail::apply(
+            [this](auto&&... xs) {
+                new (&_left) L(std::forward<decltype(xs)>(xs)...);
+            },
+            std::move(branch.arguments));
     }
 
     template <class T>
     either(right_branch<T> const& branch):
         _is_right(true) {
-        new (&_right) L(branch.value);
+        new (&_right) R(branch.value);
     }
 
-    template <class T>
-    either(right_branch<T>&& branch):
+    template <class... Ts>
+    either(right_branch<Ts...>&& branch):
         _is_right(true) {
-        new (&_right) R(std::move(branch.value));
+        detail::apply(
+            [this](auto&&... xs) {
+                new (&_right) R(std::forward<decltype(xs)>(xs)...);
+            },
+            std::move(branch.arguments));
     }
 
     template <class ...Ts>
@@ -181,11 +225,15 @@ class either {
 
 };
 
-template <class T>
-left_branch<T> make_left(T&& value) { return {std::forward<T>(value)}; }
+template <class ...Ts>
+left_branch<Ts...> make_left(Ts&&... args) {
+    return left_branch<Ts...>{std::forward<Ts>(args)...};
+}
 
-template <class T>
-right_branch<T> make_right(T&& value) { return {std::forward<T>(value)}; }
+template <class ...Ts>
+right_branch<Ts...> make_right(Ts&&... args) {
+    return right_branch<Ts...>{std::forward<Ts>(args)...};
+}
 
 template <class L, class R>
 bool operator==(either<L, R> const& lhs, either<L, R> const& rhs) {

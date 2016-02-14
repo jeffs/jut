@@ -346,15 +346,15 @@ void test_move_assignment_right_right() {
 }
 
 void test_left_branch() {
-    either<int, string> x = jut::dat::make_left(42);
+    either<string, int> x = jut::dat::make_left(3, 'a');
     assert(x.is_left());
-    assert(x.left() == 42);
+    assert(x.left() == "aaa");
 }
 
 void test_right_branch() {
-    either<int, string> x = jut::dat::make_right("hello");
+    either<int, string> x = jut::dat::make_right(3, 'b');
     assert(x.is_right());
-    assert(x.right() == "hello");
+    assert(x.right() == "bbb");
 }
 
 void test_emplace_left_on_left() {
