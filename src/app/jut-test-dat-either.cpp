@@ -23,9 +23,9 @@ struct copy_counter {
     int          value;
     copy_report& report;
 
-    copy_counter(int value_, copy_report& report_):
-        value(value_),
-        report(report_) { }
+    copy_counter(int value, copy_report& report):
+        value(value),
+        report(report) { }
 
     copy_counter(copy_counter const& rhs):
         value(rhs.value),

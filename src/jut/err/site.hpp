@@ -46,11 +46,11 @@ struct site_logic_error: std::logic_error {
 
     site_logic_error(
             std::string const& what,
-            std::string const& file_,
-            int const          line_):
+            std::string const& file,
+            int const          line):
         logic_error(what),
-        file(file_),
-        line(line_) { }
+        file(file),
+        line(line) { }
 };
 
 std::ostream& operator<<(std::ostream&, site_logic_error const&);
