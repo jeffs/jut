@@ -1,4 +1,4 @@
-/** @file app/jut-test-dat-either.cpp Test driver for jut/test/dat/either. */
+/** @file app/jut-test-dat-either.cpp Test driver for jut/dat/either. */
 
 #include "jut/dat/either.hpp"
 
