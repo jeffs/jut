@@ -1,4 +1,4 @@
-/** @file anagram.cpp Prints anagrams of words provided on command line.
+/** @file anagram.cpp Prints anagrams of words specified on the command line.
  *
  * @todo Accept word-file as a flag parameter.
  */
@@ -8,7 +8,7 @@
 #include "jut/txt/roll.hpp"
 #include "jut/txt/split.hpp"
 
-// C++ Standard
+// C++ standard
 #include <algorithm>
 #include <chrono>
 #include <exception>

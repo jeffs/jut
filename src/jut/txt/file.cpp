@@ -1,6 +1,6 @@
 #include "jut/txt/file.hpp"
 
-// C++ Standard
+// C++ standard
 #include <sstream>
 #include <stdexcept>
 

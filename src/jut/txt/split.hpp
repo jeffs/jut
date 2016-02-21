@@ -1,9 +1,9 @@
-/** @file split.hpp Expands strings into sequences of substrings. */
+/** @file jut/txt/split.hpp Expands strings into sequences of substrings. */
 
 #ifndef JUT_TXT_SPLIT_INCLUDED
 #define JUT_TXT_SPLIT_INCLUDED
 
-// C++ Standard
+// C++ standard
 #include <string>
 #include <vector>
 

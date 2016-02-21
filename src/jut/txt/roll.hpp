@@ -1,12 +1,14 @@
 /** @file jut/txt/roll.hpp Prints text in a slow, flickery way.
  *
  * This component gives textual user interfaces an old-fashioned feel.
+ *
+ * @todo Async.
  */
 
 #ifndef JUT_TXT_ROLL_INCLUDED
 #define JUT_TXT_ROLL_INCLUDED
 
-// C++ Standard
+// C++ standard
 #include <chrono>
 #include <iosfwd>
 #include <string>
@@ -14,7 +16,7 @@
 namespace jut { // Jeff's UTilitites
 namespace txt { // TeXT
 
-const std::chrono::milliseconds roll_period_default(3);
+std::chrono::milliseconds const roll_period_default(3);
 
 void roll(
         std::string const& line,
