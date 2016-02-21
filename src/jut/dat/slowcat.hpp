@@ -1,6 +1,7 @@
 /** @file jut/dat/slowcat.hpp Slowly copies data from one stream to another.
  *
  * @todo Async.
+ * @todo Unbuffer.
  */
 
 #ifndef JUT_DAT_SLOWCAT_INCLUDED
