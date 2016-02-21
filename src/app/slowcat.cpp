@@ -1,11 +1,11 @@
-/** @file app/slowcat.cpp Slowly writes data from standard input.  Useful for
- * sending data to command-line programs at a rate typical of a human being
- * typing manually.
+/** @file app/slowcat.cpp Slowly writes data from standard input.
+ *
+ * The intent of this program is to sending data to command-line programs at a
+ * rate typical of a human being typing manually.  In practice, `unbuffer -p`
+ * and/or `nc -i 1` are more effective.
  *
  * @todo Accept period as command-line flag.
- *
- * @todo Interact directly with terminal, to make sure `unbuffer` wrapping is
- * unnecessary.
+ * @todo Check `isatty` and disable any buffering.
  */
 
 // Local
