@@ -13,6 +13,7 @@ void dat::slowcat(
     for (char c; input.get(c);) {
         std::this_thread::sleep_for(period);
         output.put(c);
+        output.flush();
     }
 }
 
