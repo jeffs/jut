@@ -24,7 +24,7 @@ int main(int argc, char** argv) try {
         dat::slowcat(std::cin, std::cout);
     } else {
         while (*++argv)
-            dat::slowcat(txt::open(*argv, std::ios::binary), std::cout);
+            dat::slowcat(txt::open(*argv), std::cout);
     }
 } catch (std::exception const& x) {
     std::clog << "slowcat: " << x.what() << std::endl;
