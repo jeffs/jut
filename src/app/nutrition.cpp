@@ -1,9 +1,11 @@
 #include "jut/err/site.hpp"
+#include "jut/txt/case.hpp"
 #include "jut/txt/trim.hpp"
 
 #include <ctime>
 #include <fstream>
 #include <iostream>
+#include <sstream>
 
 static std::string date_stamp() {
     char buffer[sizeof("YYYY-MM-DD")];
@@ -31,8 +33,19 @@ int main(int argc, char** argv) try {
     std::ifstream in(path);
     if (!in)
         throw "can't read file: " + path;
-    for (std::string line; get_line(in, line);)
-        std::cout << line << '\n';
+    for (std::string line; get_line(in, line);) {
+        double count;
+        std::string unit, name;
+        std::istringstream in(line);
+        if (!(in >> count >> unit >> name))
+            throw "bad line: " + line;
+        for (std::string more; in >> more;)
+            name += "-" + more;
+        name = jut::txt::to_lower(name);
+        std::cout << "count = " << count
+            << ", unit = " << unit
+            << ", name = " << name << '\n';
+    }
 } catch (char const* what) {
     std::clog << "error: " << what << '\n';
     return 1;
