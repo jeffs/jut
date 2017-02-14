@@ -15,3 +15,6 @@ var
 
 # generated from markdown
 *.md.html
+
+# generated from restructuredText
+*.rst.html
