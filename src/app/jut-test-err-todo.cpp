@@ -33,4 +33,5 @@ int main() try {
     TEST(++s{})
 } catch (std::string const& what) {
     std::clog << "FAIL: " << what << '\n';
+    return 1;
 }

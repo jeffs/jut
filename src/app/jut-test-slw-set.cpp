@@ -24,4 +24,5 @@ int main(int argc, char** argv) try {
     assert((bloomberg + "Alice"s == set{"Alice", "Brock", "Chris"}));
 } catch (std::exception const& x) {
     std::clog << argv[0] << ": " << x.what() << std::endl;
+    return 1;
 }

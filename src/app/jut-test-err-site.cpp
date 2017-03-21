@@ -55,6 +55,8 @@ int main() try {
 
 } catch (site_logic_error const& x) {
     std::cerr << "Error: " << x << '\n';
+    return 1;
 } catch (std::exception const& x) {
     std::cerr << "Error: " << x.what() << '\n';
+    return 2;
 }

@@ -78,30 +78,41 @@ std::string assert_eq_format(L const& lhs, R const& rhs) {
 
 }   // detail
 
-template <class E>
-struct basic_site_error: E {
+/** Exists to let you catch site runtime and logic errors in a single block. */
+struct site_error {
 
     friend
-    std::ostream& operator<<(std::ostream& out, basic_site_error const& x) {
+    std::ostream& operator<<(std::ostream& out, site_error const& x) {
         return out << x.file << ':' << x.line << ": " << x.what();
     }
 
     std::string file;
     int         line;
 
+    site_error(std::string file, int const line):
+        file(move(file)),
+        line(line) { }
+
+    virtual const char* what() const noexcept =0;
+};
+
+template <class E>
+struct basic_site_error: E, site_error {
+
     basic_site_error(
             std::string const& what,
             std::string const& file,
             int const          line):
         E(what),
-        file(file),
-        line(line) { }
+        site_error(file, line) { }
+
+    const char* what() const noexcept override {
+        return E::what();
+    }
 };
 
 using site_logic_error = basic_site_error<std::logic_error>;
 using site_runtime_error = basic_site_error<std::runtime_error>;
-
-std::ostream& operator<<(std::ostream&, site_logic_error const&);
 
 }   // err
 }   // jut
