@@ -1,18 +1,19 @@
+/** @file app/nutrition.cpp Utility for daily diet tracking.
+ *
+ * @todo Load and store ingredients and recipes.
+ * @todo Load and store daily diet logs.
+ * @todo Sum and report macronutrients.
+ */
+
 #include "jut/err/site.hpp"
 #include "jut/txt/case.hpp"
+#include "jut/txt/date.hpp"
 #include "jut/txt/trim.hpp"
 
 #include <ctime>
 #include <fstream>
 #include <iostream>
 #include <sstream>
-
-static std::string date_stamp() {
-    char buffer[sizeof("YYYY-MM-DD")];
-    std::time_t const now = JUT_ERR_CHECK_POSIX(std::time(nullptr));
-    std::strftime(buffer, sizeof buffer, "%F", localtime(&now));
-    return buffer;
-}
 
 static std::string strip_comment(std::string const& line) {
     auto e = line.find('#');
@@ -29,7 +30,8 @@ static bool get_line(std::istream& in, std::string& line) {
 }
 
 int main(int argc, char** argv) try {
-    std::string const path = "/Users/jeff/home/fit/log/" + date_stamp();
+    std::string const path = "/Users/jeff/home/fit/log/" +
+        jut::txt::date_stamp();
     std::ifstream in(path);
     if (!in)
         throw "can't read file: " + path;
