@@ -17,7 +17,7 @@ using slw::operator-;
 
 using set = std::set<std::string>;
 
-int main(int argc, char** argv) try {
+int main(int, char** argv) try {
     set bloomberg{"Brock", "Chris"};
     assert((bloomberg == set{"Brock", "Chris"}));
     assert((bloomberg - "Brock"s == set{"Chris"}));
