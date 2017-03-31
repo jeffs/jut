@@ -1,5 +1,9 @@
 /** @file jut/dru/ingest.hpp Schema for Druid ingestion spec.
+ *
  * @see http://druid.io/docs/latest/ingestion/index.html
+ *
+ * @see http://druid.io/docs/latest/ingestion/command-line-hadoop-indexer.html
+ *  -> Sets type=mysql, but says that "metadata" is the only value available.
  */
 
 #ifndef JUT_DRU_INGEST_INCLUDED
@@ -19,6 +23,9 @@ namespace dru { // DRUid
 
     using std::string;
     using std::vector;
+
+    struct io_config_t { };         // TODO
+    struct tuning_config_t { };     // TODO
 
     /** @see http://druid.io/docs/latest/querying/granularities.html */
     struct granularity_spec_t {

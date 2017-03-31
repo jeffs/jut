@@ -1,24 +1,18 @@
-#include "jut/dru/ingest.hpp"
+// This program prints multiple events per second of a single day.  Events are
+// evenly distributed in two dimensions: one of low cardinality, the other
+// high.
 
 #include <cstdio>
 
-int const begin_year = 1985, end_year = 2015;
+int const lo = 2, hi = 1000;    // cardinalities
+int const eps = 100;            // events per second
+
+char const format[] = "2017-03-17T%02d:%02d:%02d\tlo%d\thi%d\t3.14159\n";
 
 int main() {
-
-    // Generate one thousand events per day.
-
+    for (int h = 0; h < 24; ++h)
+        for (int m = 0; m < 60; ++m)
+            for (int s = 0; s < 60; ++s)
+                for (int i = 0; i < eps; ++i)
+                    std::printf(format, h, m, s, i % lo, i % hi);
 }
-
-#if 0
-struct event {
-    int lo_card;    // dimension having low cardinality
-    int hi_card;    // dimension having high cardinality
-    double metric;
-};
-
-std::ostream& operator<<(std::ostream& out, event const x) {
-    return out << x.
-}
-
-#endif
