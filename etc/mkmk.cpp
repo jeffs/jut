@@ -823,7 +823,7 @@ int main(int argc, char** argv) try
         "OBJDIR = $(VARDIR)/obj\n"
         "CXX = clang++\n"
         "CPPFLAGS = -I$(SRCDIR)\n"
-        "CXXFLAGS = -std=c++1z -pedantic -Wall -stdlib=libc++\n"
+        "CXXFLAGS = -std=c++1z -pedantic -Wall -Wextra -stdlib=libc++\n"
         "LDFLAGS = -lc++\n"
         "MKDIR = mkdir -p\n"
         "RMDIR = rm -rf\n",
