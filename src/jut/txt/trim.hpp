@@ -9,6 +9,8 @@
 namespace jut { // Jeff's UTilitites
 namespace txt { // TeXT
 
+std::string trim(std::string const& s);
+
 std::string trim_margin(std::string const& s, char c ='|');
 
 }
