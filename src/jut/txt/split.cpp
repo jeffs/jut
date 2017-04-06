@@ -13,4 +13,21 @@ std::vector<std::string> txt::split(std::string const& s) {
     return result;
 }
 
+std::vector<std::string> txt::split(std::string const& s, char d) {
+    std::vector<std::string> result;
+    if (!s.empty()) {
+        std::string part;
+        for (char c : s) {
+            if (c == d) {
+                result.push_back(move(part));
+                part.clear();
+            } else {
+                part.push_back(c);
+            }
+        }
+        result.push_back(move(part));
+    }
+    return result;
+}
+
 }
