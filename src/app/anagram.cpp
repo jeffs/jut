@@ -1,4 +1,4 @@
-/** @file anagram.cpp Prints anagrams of words specified on the command line.
+/** @file anagram.cpp Prints anagrams of words specified on command line.
  *
  * @todo Accept word-file as a flag parameter.
  */
