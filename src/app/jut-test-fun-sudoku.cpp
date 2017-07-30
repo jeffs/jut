@@ -13,6 +13,7 @@
 
 int main() try {
 
+#if 0
     using board_t = jut::fun::sudoku::board;
 
     std::string const input = jut::txt::trim_margin(R"(
@@ -47,6 +48,8 @@ int main() try {
     }}));
 
     JUT_ERR_ASSERT_EQ(to_string(board), input);
+
+#endif
 
 } catch (jut::err::site_error const& err) {
     std::cerr << "FAIL: " << err.what() << '\n';
