@@ -9,9 +9,15 @@
 namespace jut { // Jeff's UTilitites
 namespace txt { // TeXT
 
-std::string trim(std::string const& s);
+/** Removes leading and trailing whitespace from the specified string. */
+std::string trim(std::string const&);
 
-std::string trim_margin(std::string const& s, char c ='|');
+/** Removes leading characters, up to a marker, from each line in a string.
+ * Characters up to and including the first instance of the marker are removed
+ * from each line.  If a line does not contain the marker, the entire line is
+ * removed.
+ */
+std::string trim_margin(std::string const&, char marker ='|');
 
 }
 }

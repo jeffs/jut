@@ -5,9 +5,6 @@
 
 // C++ standard
 #include <cassert>
-#include <sstream>
-
-#include <iostream>
 
 int main() {
     assert("" == jut::txt::trim_margin(""));
