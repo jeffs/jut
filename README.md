@@ -1,9 +1,39 @@
-# README
+# JUT: C++ Utilities
 
-Please see the [`doc`][] directory for technical documentation.
+This repository is intended to hold a collection of generally useful C++ code.
 
-Except where otherwise noted, the content of this repository is Copyright Unbuggy Software, LLC, 2014, and is distributed under the Boost Software License, Version 1.0.  See the accompanying file [`LICENSE_1_0.txt`][] or the copy at [`http://www.boost.org/LICENSE_1_0.txt`][].
+## Package structure
 
-[`doc`]: doc
-[`LICENSE_1_0.txt`]: LICENSE_1_0.txt
-[`http://www.boost.org/LICENSE_1_0.txt`]: http://www.boost.org/LICENSE_1_0.txt
+The `src` directory contains two subdirectories: `app` contains top-level
+APPlications (i.e., definitions of `::main`), whereas `jut` contains a group of
+*packages*, each having a distinct name and defining one or more *components*.
+
+A component is a set of source files whose paths differ only in the file
+extension; e.g., a component may be a single `.py` file or a `.[hc]` pair, or
+even some combination thereof (so long as the files live in the same directory
+and have the same base name).
+
+A package may define at most one group-level component directly within `jut`,
+having the same base name as the package, as well as any number of components
+within a subdirectory having the same name as the package.
+
+Relative to the `src` directory:
+
+    app                 - APPlications; i.e., definitions of ::main
+    jut                 - Jeff's Utilities library packages
+     |- dat             - DATa processing
+     |- err             - ERRor handling
+     |- slw             - Standard Library Wrappers
+     |   `- std.hpp     - STanDard library headers
+     `- txt             - TeXT processing
+
+## Style
+
+C++ code defined in `jut` conforms to the following guidelines:
+
+* At least two levels of namespace: `jut` and the package name
+* Macro names begin `JUT_PKG_`, where `PKG` is the package name
+* Indent four spaces, but only two for labels and operators
+* 79 columns
+* UTF-8
+* No newline between `)` and `{`; e.g., `int main() {`
